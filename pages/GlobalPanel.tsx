@@ -2,6 +2,7 @@
 import React, { useState, useCallback } from 'react';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
 import { IconHome, IconTrophy } from '../constants';
 import HomePage from './global/HomePage';
 import LeaderboardPage from './global/LeaderboardPage';
@@ -12,18 +13,27 @@ const GlobalPanel: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeView, setActiveView] = useState('home');
   const [showAdminLogin, setShowAdminLogin] = useState(false);
+  const [prefilledEmail, setPrefilledEmail] = useState('');
 
   const toggleSidebar = useCallback(() => {
     setSidebarOpen(prev => !prev);
   }, []);
 
   const menuItems = [
-    { name: 'Home', view: 'home', icon: <IconHome /> },
-    { name: 'Leaderboard', view: 'leaderboard', icon: <IconTrophy /> },
+    { name: 'Beranda', view: 'home', icon: <IconHome /> },
+    { name: 'Papan Peringkat', view: 'leaderboard', icon: <IconTrophy /> },
   ];
+  
+  const navigateTo = (view: string) => {
+    if (view !== 'login') {
+      // Reset admin state if navigating away from login or to a non-admin login
+      setShowAdminLogin(false);
+      setPrefilledEmail('');
+    }
+    setActiveView(view);
+  };
 
   const handleAdminClick = () => {
-    // A subtle way to show admin login
     setShowAdminLogin(true);
     setActiveView('login');
   }
@@ -31,42 +41,42 @@ const GlobalPanel: React.FC = () => {
   const renderContent = () => {
     switch (activeView) {
       case 'home':
-        return <HomePage setActiveView={setActiveView} />;
+        return <HomePage setActiveView={navigateTo} />;
       case 'leaderboard':
         return <LeaderboardPage />;
       case 'login':
-        return <LoginPage setActiveView={setActiveView} showAdminLogin={showAdminLogin} />;
+        return <LoginPage setActiveView={navigateTo} showAdminLogin={showAdminLogin} />;
       case 'register':
-        return <RegisterPage setActiveView={setActiveView} />;
+        return <RegisterPage setActiveView={navigateTo} />;
       default:
-        return <HomePage setActiveView={setActiveView} />;
+        return <HomePage setActiveView={navigateTo} />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+    <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
       <Header 
         toggleSidebar={toggleSidebar} 
+        isSidebarOpen={sidebarOpen}
         activeView={activeView}
-        setActiveView={setActiveView}
+        setActiveView={navigateTo}
         menuItems={menuItems}
         isLoggedIn={false}
+        onAdminClick={handleAdminClick}
       />
       <Sidebar 
         isOpen={sidebarOpen} 
         toggleSidebar={toggleSidebar} 
         activeView={activeView}
-        setActiveView={setActiveView}
+        setActiveView={navigateTo}
         menuItems={menuItems}
         isLoggedIn={false}
+        onAdminClick={handleAdminClick}
       />
-      <main className="container mx-auto p-4 sm:p-6 lg:p-8">
+      <main className="flex-grow container mx-auto p-4 sm:p-6 lg:p-8">
         {renderContent()}
       </main>
-      <footer className="text-center p-4 text-gray-500 text-sm">
-        <p>Copyright © {new Date().getFullYear()} Mystery Store. All rights reserved.</p>
-        <div className="w-full h-4" onClick={handleAdminClick} title="Admin Access"></div>
-      </footer>
+      <Footer />
     </div>
   );
 };

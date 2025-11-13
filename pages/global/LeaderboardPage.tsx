@@ -59,8 +59,8 @@ const LeaderboardPage: React.FC = () => {
   return (
     <div className="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-lg shadow-lg">
       <div className="flex items-center justify-center mb-6">
-        <IconTrophy />
-        <h1 className="text-3xl font-bold ml-2">Mystery Box Leaderboard</h1>
+        <IconTrophy className="w-8 h-8 text-yellow-500" />
+        <h1 className="text-3xl font-bold ml-2">Papan Peringkat Mystery Box</h1>
       </div>
       {loading ? (
         <div className="flex justify-center items-center h-64">
@@ -71,11 +71,11 @@ const LeaderboardPage: React.FC = () => {
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Rank</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">User</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Last Item Won</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Date</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Total Wins</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Peringkat</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Pengguna</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Item Terakhir Dimenangkan</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Tanggal</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Total Menang</th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -85,13 +85,13 @@ const LeaderboardPage: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-lg font-bold">{index + 1}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{entry.email}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{entry.itemWon}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{new Date(entry.timestamp).toLocaleDateString()}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{new Date(entry.timestamp).toLocaleDateString('id-ID')}</td>
                     <td className="px-6 py-4 whitespace-nowrap font-semibold">{entry.winCount}</td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="px-6 py-4 text-center text-gray-500">No winners yet. Be the first!</td>
+                  <td colSpan={5} className="px-6 py-4 text-center text-gray-500">Belum ada pemenang. Jadilah yang pertama!</td>
                 </tr>
               )}
             </tbody>

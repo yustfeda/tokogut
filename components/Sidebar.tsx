@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { IconX, IconBox } from '../constants';
+import { IconX } from '../constants';
+import Logo from './Logo';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -10,9 +11,10 @@ interface SidebarProps {
   menuItems: { name: string; view: string; icon: React.ReactElement; badge?: number }[];
   isLoggedIn: boolean;
   onLogout?: () => void;
+  onAdminClick: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar, activeView, setActiveView, menuItems, isLoggedIn, onLogout }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar, activeView, setActiveView, menuItems, isLoggedIn, onLogout, onAdminClick }) => {
   const handleItemClick = (view: string) => {
     if (view === 'logout' && onLogout) {
       onLogout();
@@ -22,6 +24,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar, activeView, se
     toggleSidebar();
   };
   
+  const handleAdminItemClick = () => {
+    onAdminClick();
+    toggleSidebar();
+  }
+
   return (
     <>
       <div
@@ -36,10 +43,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar, activeView, se
         }`}
       >
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-           <div className="flex items-center gap-2 text-lg font-bold text-gray-800 dark:text-white">
-              <IconBox />
-              <span>Mystery Store</span>
-            </div>
+           <Logo />
           <button onClick={toggleSidebar} className="text-gray-500 dark:text-gray-400">
             <IconX />
           </button>
@@ -52,7 +56,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar, activeView, se
               onClick={(e) => { e.preventDefault(); handleItemClick(item.view); }}
               className={`flex items-center px-4 py-2 text-base font-medium rounded-lg group ${
                 activeView === item.view
-                  ? 'bg-gray-100 text-gray-900 dark:bg-gray-700 dark:text-white'
+                  ? 'bg-blue-100 text-blue-900 dark:bg-blue-700 dark:text-white'
                   : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white'
               }`}
             >
@@ -67,9 +71,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar, activeView, se
           ))}
         </nav>
         {!isLoggedIn && (
-            <div className="p-4 space-y-2">
-                <button onClick={() => handleItemClick('login')} className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 transition">Login</button>
-                <button onClick={() => handleItemClick('register')} className="w-full bg-gray-200 text-gray-800 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-300 transition">Register</button>
+            <div className="p-4 space-y-2 border-t border-gray-200 dark:border-gray-700">
+                <button onClick={handleAdminItemClick} className="w-full bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-600 transition">Admin</button>
+                <button onClick={() => handleItemClick('login')} className="w-full bg-yellow-500 text-gray-900 font-semibold px-4 py-2 rounded-md text-sm hover:bg-yellow-600 transition">Masuk</button>
+                <button onClick={() => handleItemClick('register')} className="w-full bg-blue-500 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-600 transition">Daftar</button>
             </div>
         )}
       </div>

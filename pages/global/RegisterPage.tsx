@@ -18,7 +18,7 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ setActiveView }) => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError("Password tidak cocok.");
       return;
     }
     setError('');
@@ -28,17 +28,21 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ setActiveView }) => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Create a user profile in the Realtime Database
       await set(ref(db, 'users/' + user.uid), {
         uid: user.uid,
         email: user.email,
         role: 'user',
         createdAt: Date.now(),
+        totalSpent: 0,
+        mysteryBoxPlays: 0,
       });
       
-      // After registration, App.tsx will handle the view change automatically
     } catch (err: any) {
-      setError(err.message);
+      if (err.code === 'auth/email-already-in-use') {
+        setError("Email ini sudah terdaftar.");
+      } else {
+        setError("Gagal mendaftar. Silakan coba lagi.");
+      }
     } finally {
       setLoading(false);
     }
@@ -47,7 +51,7 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ setActiveView }) => {
   return (
     <div className="flex items-center justify-center">
       <div className="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold text-center">Create an Account</h2>
+        <h2 className="text-2xl font-bold text-center">Buat Akun Baru</h2>
         <form onSubmit={handleRegister} className="space-y-6">
           <div>
             <label htmlFor="email-reg" className="block text-sm font-medium">Email</label>
@@ -57,7 +61,7 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ setActiveView }) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             />
           </div>
           <div>
@@ -68,35 +72,35 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ setActiveView }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             />
           </div>
           <div>
-            <label htmlFor="confirm-password-reg" className="block text-sm font-medium">Confirm Password</label>
+            <label htmlFor="confirm-password-reg" className="block text-sm font-medium">Konfirmasi Password</label>
             <input
               id="confirm-password-reg"
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             />
           </div>
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
           <div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full px-4 py-2 font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+              className="w-full px-4 py-2 font-semibold text-gray-900 bg-yellow-500 rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:opacity-50"
             >
-              {loading ? 'Registering...' : 'Register'}
+              {loading ? 'Mendaftarkan...' : 'Daftar'}
             </button>
           </div>
         </form>
         <p className="text-sm text-center">
-          Already have an account?{' '}
-          <button onClick={() => setActiveView('login')} className="font-medium text-indigo-600 hover:text-indigo-500">
-            Login
+          Sudah punya akun?{' '}
+          <button onClick={() => setActiveView('login')} className="font-medium text-blue-600 hover:text-blue-500">
+            Masuk
           </button>
         </p>
       </div>
